@@ -14,10 +14,10 @@ namespace custom // (main line 41)
         private:
 
         T * buffer;
-        int numElements;
-        int numCapacity; 
+        int numElements; // # of elements (size)
+        int numCapacity; //doubles when buffer filled
 
-        void resize (int numCapacity);
+        void resize (int numCapacity); //utilized by push back function, creates an array double the size of previous
     
         public:
 
@@ -27,17 +27,20 @@ namespace custom // (main line 41)
 
         vector(); //default vector (main line 48)
         vector(int numElements); //sized vector (main line 57)
-        vector(int numElements, T t); //
-        vector(vector rhs); //copy vector (main line 300)
+        vector(int numElements, const T & t); 
+        vector(const vector <T> & rhs); //copy vector (main line 300)
         ~vector(); //deconstructer
 
-        vector & operator = (vector rhs);
+        vector <T> & operator = (const vector & rhs);
         int size();
         int capacity();
         bool empty();
         void clear();
-        void push_back(T t);
+        void push_back(const T & t); //adds the element to the end, if numElements = numCapacity, call resize
         T & operator [] (int index); //check to see that this is what its called in main
+       
+        class iterator;
+
         iterator begin();
         iterator end();
     };
@@ -47,7 +50,7 @@ namespace custom // (main line 41)
     {
         private:
 
-        T p; //vector from template
+        T * p; //vector from template
 
         public:
 
@@ -56,18 +59,20 @@ namespace custom // (main line 41)
         #endif
 
         iterator();
-        iterator(T p);
-        iterator(iterator rhs);
+        iterator(T * p);
+        iterator(const iterator & rhs);
 
-        iterator assignment(iterater it);
-        bool isEquals(iterator it);
-        bool isNEqual(iterator it);
-        iterator increment();
-        iterator decrement();
-        T dereference();
+        iterator & operator = (const iterater & it);
+        bool operator != (const iterator & it) const;
+        bool operator == (const iterator & it) const;
+        iterator & operator ++ ();
+        iterator operator ++ (int postfix);
+        iterator & operator -- ();
+        iterator operator -- (int postfix);
+        T & operator * ();
     };
 
-}
+};
 
 #include "vector.cpp"
 
