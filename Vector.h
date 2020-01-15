@@ -18,7 +18,7 @@ namespace custom // (main line 41)
         int numCapacity; 
 
         void resize (int numCapacity);
-
+    
         public:
 
         #ifdef UNIT_TESTING // only for Unit Testing
@@ -31,19 +31,19 @@ namespace custom // (main line 41)
         vector(vector rhs); //copy vector (main line 300)
         ~vector(); //deconstructer
 
-        vector assign(vector rhs);
+        vector & operator = (vector rhs);
         int size();
         int capacity();
         bool empty();
         void clear();
         void push_back(T t);
-        T access(int index); //check to see that this is what its called in main
+        T & operator [] (int index); //check to see that this is what its called in main
         iterator begin();
         iterator end();
     };
 
     template <class it>
-    class iterator
+    class vector <T>  :: iterator
     {
         private:
 
@@ -65,7 +65,7 @@ namespace custom // (main line 41)
         iterator increment();
         iterator decrement();
         T dereference();
-    }
+    };
 
 }
 
