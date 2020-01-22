@@ -25,19 +25,18 @@
 /* !!!!GRADING INSTRUCTIONS!!!!
  *
  * When you report your score for this test set, report
- * the percentage of asserts found in this test code that
+ * the percentage of assertTrues found in this test code that
  * your data structure code passed.
  */
 #define UNIT_TESTING
 //Do not change the next line without instructor approval.
 //To do so is cheating and, when found, will result in consequences.
-int asserts_existing = 127;
+int asserts_existing = 112;
 
 #include <cstring>
-#include "vector.h"
+#include "stack.h"
 #include "unit_testing.h"
 
-using std::string;
 using namespace custom;
 
 
@@ -48,391 +47,341 @@ int main(int argc, const char* argv[]) {
      * Testing default constructor
      */
     startTestSet("Default Constructor");
-    vector <int> defaultVector;
-    assertTrue(defaultVector.numCapacity == 0, __LINE__);
-    assertTrue(defaultVector.numElements == 0, __LINE__);
-    assertTrue(defaultVector.buffer == NULL, __LINE__);
+    stack <int> defaultStack;
+    assertTrue(defaultStack.numCapacity == 0, __LINE__);
+    assertTrue(defaultStack.numElements == 0, __LINE__);
+    assertTrue(defaultStack.buffer == NULL, __LINE__);
     
-    /*
-     * Testing sized vector constructor
-     */
-    startTestSet("Sized Constructor");
-    try{
-        vector<int> badSizeVector(-3);
-        assertTrue(false, __LINE__);
-    } catch(const char* exceptionMessage){
-        assertTrue(strcmp(exceptionMessage,"Error: vector sizes must be greater than 0.") == 0, __LINE__);
-    }
-    
-    vector <int> sizedVector(4);
-    assertTrue(sizedVector.numCapacity == 4, __LINE__);
-    assertTrue(sizedVector.numElements == 4, __LINE__);
-    assertTrue(sizedVector.buffer != NULL, __LINE__);
-    assertTrue(sizedVector.buffer[0] == 0, __LINE__);
-    assertTrue(sizedVector.buffer[1] == 0, __LINE__);
-    assertTrue(sizedVector.buffer[2] == 0, __LINE__);
-    assertTrue(sizedVector.buffer[3] == 0, __LINE__);
-    
-    /*
-     * Testing sized and filled vector constructor
-     */
-    startTestSet("Sized Constructor with Default Value");
-    try{
-        vector<int>zeroSizedFilledVector(0,15);
-        assertTrue(false, __LINE__);
-    } catch(const char* exceptionMessage){
-        assertTrue(strcmp(exceptionMessage,"Error: vector sizes must be greater than 0.") == 0, __LINE__);
-    }
-    vector<int>filledVector(4,0);
-    assertTrue(filledVector.buffer != NULL, __LINE__);
-    assertTrue(filledVector.numElements == 4, __LINE__);
-    assertTrue(filledVector.numCapacity == 4, __LINE__);
-    assertTrue(filledVector.buffer[0] == 0, __LINE__);
-    assertTrue(filledVector.buffer[1] == 0, __LINE__);
-    assertTrue(filledVector.buffer[2] == 0, __LINE__);
-    assertTrue(filledVector.buffer[3] == 0, __LINE__);
     
     /*
      * Testing Size
      */
     startTestSet("Size");
-    vector <int> sizeTestVector;
+    stack <int> sizeTestStack;
     
-    sizeTestVector.numCapacity = 8;
-    sizeTestVector.numElements = 4;
-    assertTrue(sizeTestVector.size() == 4, __LINE__);
+    sizeTestStack.numCapacity = 8;
+    sizeTestStack.numElements = 4;
+    assertTrue(sizeTestStack.size() == 4, __LINE__);
     
     /*
      * Testing Capacity
      */
     startTestSet("Capacity");
-    assertTrue(sizeTestVector.capacity() == 8, __LINE__);
-    sizeTestVector.numCapacity = 0;
-    assertTrue(sizeTestVector.capacity() == 0, __LINE__);
+    assertTrue(sizeTestStack.capacity() == 8, __LINE__);
+    sizeTestStack.numCapacity = 0;
+    assertTrue(sizeTestStack.capacity() == 0, __LINE__);
     
     /*
      * Resetting for further use
      */
-    sizeTestVector.numCapacity = 8;
-    sizeTestVector.numElements = 0;
-    sizeTestVector.buffer = new int[sizeTestVector.numCapacity];
-    for (int i = 0; i < sizeTestVector.numCapacity; i++) {
-        sizeTestVector.buffer[i]=i*i+1;
+    sizeTestStack.numCapacity = 8;
+    sizeTestStack.numElements = 0;
+    sizeTestStack.buffer = new int[sizeTestStack.numCapacity];
+    for (int i = 0; i < sizeTestStack.numCapacity; i++) {
+        sizeTestStack.buffer[i]=i*i+1;
     }
     /*
      * Testing Clear
      */
     startTestSet("Clear");
-    sizeTestVector.clear();
-    assertTrue(sizeTestVector.numCapacity == 8, __LINE__);
-    assertTrue(sizeTestVector.numElements == 0, __LINE__);
-    assertTrue(sizeTestVector.buffer != NULL, __LINE__);
+    sizeTestStack.clear();
+    assertTrue(sizeTestStack.numCapacity == 8, __LINE__);
+    assertTrue(sizeTestStack.numElements == 0, __LINE__);
+    assertTrue(sizeTestStack.buffer != NULL, __LINE__);
     
     /*
      * Testing Empty
      */
     startTestSet("Empty");
-    sizeTestVector.numElements = 3;
-    assertTrue(!sizeTestVector.empty(), __LINE__);
+    sizeTestStack.numElements = 3;
+    assertTrue(!sizeTestStack.empty(), __LINE__);
     
-    sizeTestVector.numElements = 0;
+    sizeTestStack.numElements = 0;
     
-    assertTrue(sizeTestVector.empty(), __LINE__);
+    assertTrue(sizeTestStack.empty(), __LINE__);
     
     /*
      * Testing resize
      */
     startTestSet("Negative Resize");
-    vector<int> emptyResizeVector;
-    emptyResizeVector.resize(-1);
-    assertTrue(emptyResizeVector.numCapacity == 0, __LINE__);
-    assertTrue(emptyResizeVector.numElements == 0, __LINE__);
-    assertTrue(emptyResizeVector.buffer == NULL, __LINE__);
+    stack<int> emptyResizeStack;
+    emptyResizeStack.resize(-1);
+    assertTrue(emptyResizeStack.numCapacity == 0, __LINE__);
+    assertTrue(emptyResizeStack.numElements == 0, __LINE__);
+    assertTrue(emptyResizeStack.buffer == NULL, __LINE__);
     
-    startTestSet("Default Vector Resize");
-    emptyResizeVector.resize(7);
-    assertTrue(emptyResizeVector.numCapacity == 7, __LINE__);
-    assertTrue(emptyResizeVector.numElements == 0, __LINE__);
-    assertTrue(emptyResizeVector.buffer != NULL, __LINE__);
+    startTestSet("Default Stack Resize");
+    emptyResizeStack.resize(7);
+    assertTrue(emptyResizeStack.numCapacity == 7, __LINE__);
+    assertTrue(emptyResizeStack.numElements == 0, __LINE__);
+    assertTrue(emptyResizeStack.buffer != NULL, __LINE__);
     
     startTestSet("Resize");
-    vector <int> resizeVector;
-    resizeVector.buffer = new int[5];
-    resizeVector.numCapacity = 5;
-    resizeVector.numElements = 5;
-    resizeVector.buffer[0] = 7;
-    resizeVector.buffer[1] = 12;
-    resizeVector.buffer[2] = 10;
-    resizeVector.buffer[3] = 9;
-    resizeVector.buffer[4] = 8;
+    stack <int> resizeStack;
+    resizeStack.buffer = new int[5];
+    resizeStack.numCapacity = 5;
+    resizeStack.numElements = 5;
+    resizeStack.buffer[0] = 7;
+    resizeStack.buffer[1] = 12;
+    resizeStack.buffer[2] = 10;
+    resizeStack.buffer[3] = 9;
+    resizeStack.buffer[4] = 8;
     
-    int *theBuffer = resizeVector.buffer;
-    resizeVector.resize(10);
-    assertTrue(theBuffer != resizeVector.buffer, __LINE__);
-    assertTrue(resizeVector.numCapacity == 10, __LINE__);
-    assertTrue(resizeVector.numElements == 5, __LINE__);
-    assertTrue(resizeVector.buffer[0] == 7, __LINE__);
-    assertTrue(resizeVector.buffer[1] == 12, __LINE__);
-    assertTrue(resizeVector.buffer[2] == 10, __LINE__);
-    assertTrue(resizeVector.buffer[3] == 9, __LINE__);
-    assertTrue(resizeVector.buffer[4] == 8, __LINE__);
+    int *theBuffer = resizeStack.buffer;
+    resizeStack.resize(10);
+    assertTrue(theBuffer != resizeStack.buffer, __LINE__);
+    assertTrue(resizeStack.numCapacity == 10, __LINE__);
+    assertTrue(resizeStack.numElements == 5, __LINE__);
+    assertTrue(resizeStack.buffer[0] == 7, __LINE__);
+    assertTrue(resizeStack.buffer[1] == 12, __LINE__);
+    assertTrue(resizeStack.buffer[2] == 10, __LINE__);
+    assertTrue(resizeStack.buffer[3] == 9, __LINE__);
+    assertTrue(resizeStack.buffer[4] == 8, __LINE__);
     
-    theBuffer = resizeVector.buffer;
-    resizeVector.resize(2);
-    assertTrue(theBuffer != resizeVector.buffer, __LINE__);
-    assertTrue(resizeVector.numCapacity == 2, __LINE__);
-    assertTrue(resizeVector.numElements == 2, __LINE__);
-    assertTrue(resizeVector.buffer[0] == 7, __LINE__);
-    assertTrue(resizeVector.buffer[1] == 12, __LINE__);
+    theBuffer = resizeStack.buffer;
+    resizeStack.resize(2);
+    assertTrue(theBuffer != resizeStack.buffer, __LINE__);
+    assertTrue(resizeStack.numCapacity == 2, __LINE__);
+    assertTrue(resizeStack.numElements == 2, __LINE__);
+    assertTrue(resizeStack.buffer[0] == 7, __LINE__);
+    assertTrue(resizeStack.buffer[1] == 12, __LINE__);
     
-    theBuffer = resizeVector.buffer;
-    resizeVector.resize(0);
-    assertTrue(resizeVector.numCapacity == 0, __LINE__);
-    assertTrue(resizeVector.numElements == 0, __LINE__);
-    assertTrue(resizeVector.buffer == NULL, __LINE__);
-    
-    
-    /*
-     * Testing push_back with no resizing
-     */
-    startTestSet("Push Back First Element");
-    vector <int> pushBackVector(5);
-    int * tempBuffer = pushBackVector.buffer;
-    pushBackVector.push_back(1);
-    assertTrue(tempBuffer != pushBackVector.buffer, __LINE__);
-    assertTrue(pushBackVector.numCapacity == 10, __LINE__);
-    assertTrue(pushBackVector.numElements == 6, __LINE__);
-    assertTrue(pushBackVector.buffer[0] == 0, __LINE__);
-    assertTrue(pushBackVector.buffer[1] == 0, __LINE__);
-    assertTrue(pushBackVector.buffer[2] == 0, __LINE__);
-    assertTrue(pushBackVector.buffer[3] == 0, __LINE__);
-    assertTrue(pushBackVector.buffer[4] == 0, __LINE__);
-    assertTrue(pushBackVector.buffer[5] == 1, __LINE__);
-    
-    startTestSet("Push Back Second Element");
-    pushBackVector.push_back(3);
-    assertTrue(pushBackVector.numCapacity == 10, __LINE__);
-    assertTrue(pushBackVector.numElements == 7, __LINE__);
-    assertTrue(pushBackVector.buffer[0] == 0, __LINE__);
-    assertTrue(pushBackVector.buffer[1] == 0, __LINE__);
-    assertTrue(pushBackVector.buffer[2] == 0, __LINE__);
-    assertTrue(pushBackVector.buffer[3] == 0, __LINE__);
-    assertTrue(pushBackVector.buffer[4] == 0, __LINE__);
-    assertTrue(pushBackVector.buffer[5] == 1, __LINE__);
-    assertTrue(pushBackVector.buffer[6] == 3, __LINE__);
-    
-    
+    theBuffer = resizeStack.buffer;
+    resizeStack.resize(0);
+    assertTrue(resizeStack.numCapacity == 0, __LINE__);
+    assertTrue(resizeStack.numElements == 0, __LINE__);
+    assertTrue(resizeStack.buffer == NULL, __LINE__);
     
     
     /*
-     * Testing Accessor
+     * Testing push with resizing
      */
-    startTestSet("[] Accessor Operator");
-    vector <int> beginEndVector;
-    beginEndVector.buffer = new int[6];
-    beginEndVector.buffer[0] = -500;
-    beginEndVector.buffer[1] = 0;
-    beginEndVector.buffer[2] = 7;
-    beginEndVector.buffer[3] = 13;
-    beginEndVector.buffer[4] = 23;
-    beginEndVector.numCapacity = 6;
-    beginEndVector.numElements = 5;
-    assertTrue(beginEndVector[0] == -500, __LINE__);
+    startTestSet("Push First Element");
+    stack <int> pushStack;
+    theBuffer = pushStack.buffer;
+    pushStack.push(1);
+    assertTrue(pushStack.numCapacity == 1, __LINE__);
+    assertTrue(pushStack.numElements == 1, __LINE__);
+    assertTrue(theBuffer != pushStack.buffer, __LINE__);
+    assertTrue(pushStack.buffer[0] == 1, __LINE__);
     
+    startTestSet("Push Second Element");
+    theBuffer = pushStack.buffer;
+    pushStack.push(3);
+    assertTrue(pushStack.numCapacity == 2, __LINE__);
+    assertTrue(pushStack.numElements == 2, __LINE__);
+    assertTrue(theBuffer != pushStack.buffer, __LINE__);
+    assertTrue(pushStack.buffer[0] == 1, __LINE__);
+    assertTrue(pushStack.buffer[1] == 3, __LINE__);
+    
+    startTestSet("Push Third Element");
+    theBuffer = pushStack.buffer;
+    pushStack.push(5);
+    assertTrue(pushStack.numCapacity == 4, __LINE__);
+    assertTrue(pushStack.numElements == 3, __LINE__);
+    assertTrue(theBuffer != pushStack.buffer, __LINE__);
+    assertTrue(pushStack.buffer[0] == 1, __LINE__);
+    assertTrue(pushStack.buffer[1] == 3, __LINE__);
+    assertTrue(pushStack.buffer[2] == 5, __LINE__);
+    
+    startTestSet("Push Fourth Element");
+    theBuffer = pushStack.buffer;
+    pushStack.push(7);
+    assertTrue(pushStack.numCapacity == 4, __LINE__);
+    assertTrue(pushStack.numElements == 4, __LINE__);
+    assertTrue(theBuffer == pushStack.buffer, __LINE__);
+    assertTrue(pushStack.buffer[0] == 1, __LINE__);
+    assertTrue(pushStack.buffer[1] == 3, __LINE__);
+    assertTrue(pushStack.buffer[2] == 5, __LINE__);
+    assertTrue(pushStack.buffer[3] == 7, __LINE__);
+    
+    
+    
+    /*
+     * Testing pop
+     */
+    startTestSet("Pop");
+    stack<int> popStack;
+    popStack.pop();
+    assertTrue(popStack.numElements == 0, __LINE__);
+    assertTrue(popStack.numCapacity == 0, __LINE__);
+    assertTrue(popStack.buffer == NULL, __LINE__);
+    
+    /*
+     * Simulate situation where one push has been done.
+     */
+    popStack.numElements = 1;
+    popStack.numCapacity = 1;
+    popStack.buffer = new int[1];
+    popStack.buffer[0] = 3;
+    
+    popStack.pop();
+    assertTrue(popStack.numElements == 0, __LINE__);
+    assertTrue(popStack.numCapacity == 1, __LINE__);
+    assertTrue(popStack.buffer != NULL, __LINE__);
+    assertTrue(popStack.buffer[0] == 3, __LINE__);//this value is abandoned, but not replaced by pop.
+    
+    /*
+     * Simulate situation where elements != capacity.
+     */
+    delete [] popStack.buffer;
+    popStack.buffer = new int[5];
+    popStack.numElements = 3;
+    popStack.numCapacity = 5;
+    popStack.buffer[0] = 1;
+    popStack.buffer[1] = -7;
+    popStack.buffer[2] = 3861;
+    
+    popStack.pop();
+    assertTrue(popStack.numElements == 2, __LINE__);
+    assertTrue(popStack.numCapacity == 5, __LINE__);
+    assertTrue(popStack.buffer != NULL, __LINE__);
+    assertTrue(popStack.buffer[0] == 1, __LINE__);
+    assertTrue(popStack.buffer[1] == -7, __LINE__);
+    assertTrue(popStack.buffer[2] == 3861, __LINE__);
+    
+    
+    /*
+     * Testing top getter
+     */
+    startTestSet("Top Accessor");
+    stack<int> topStack;
     try{
-        beginEndVector[-1];
-        assertTrue(false, __LINE__);
-    } catch (const char * message) {
-        assertTrue(strcmp(message, "Error: indices must be greater than zero and less than size().") == 0, __LINE__);
-    }
-    
-    
-    try{
-        beginEndVector[6];
-        assertTrue(false, __LINE__);
-    } catch (const char * message) {
-        assertTrue(strcmp(message, "Error: indices must be greater than zero and less than size().") == 0, __LINE__);
-    }
-    
-    
-    vector <int> emptyVector;
-    try{
-        emptyVector[0];
+        int topValue = topStack.top();
+        topValue = 18;
         assertTrue(false, __LINE__);
     } catch (const char* message) {
-        assertTrue(strcmp(message, "Error: indices must be greater than zero and less than size().") == 0, __LINE__);
+        assertTrue(strcmp(message, "Error: asking for top of empty stack.") == 0, __LINE__);
     }
+    //simulating full buffer
+    topStack.numElements = 5;
+    topStack.numCapacity = 5;
+    topStack.buffer = new int[5];
+    topStack.buffer[0] = 1;
+    topStack.buffer[1] = -7;
+    topStack.buffer[2] = 3861;
+    topStack.buffer[3] = 0;
+    topStack.buffer[4] = 18;
+    assertTrue(topStack.top() == 18, __LINE__);
+    //simulating non-full buffer
+    topStack.numElements = 3;
+    assertTrue(topStack.top() == 3861, __LINE__);
     
+    int topValue = topStack.top();
+    topValue = 34;
+    assertTrue(topStack.top() == 3861, __LINE__);
     
     /*
-     * Testing Mutator
+     * Testing top setter
      */
-    startTestSet("[] Mutator Operator");
-    beginEndVector[0] = 35;
-    assertTrue(beginEndVector.buffer[0] == 35, __LINE__);
+    //reseting
+    delete [] topStack.buffer;
+    topStack.buffer = NULL;
+    topStack.numElements = 0;
+    topStack.numCapacity = 0;
+    try{
+        topStack.top() = 3;
+        assertTrue(false, __LINE__);
+    } catch (const char* message) {
+        strcmp(message, "Error: asking for top of empty stack.");
+    }
+    //simulating full buffer
+    topStack.numElements = 5;
+    topStack.numCapacity = 5;
+    topStack.buffer = new int[5];
+    topStack.buffer[0] = 1;
+    topStack.buffer[1] = -7;
+    topStack.buffer[2] = 3861;
+    topStack.buffer[3] = 0;
+    topStack.buffer[4] = 18;
+    topStack.top() = -13;
+    assertTrue(topStack.top() == -13, __LINE__);
+    //simulating non-full buffer
+    topStack.numElements = 3;
+    topStack.top() = 421;
+    assertTrue(topStack.top() == 421, __LINE__);
     
     /*
      * Testing = operator and copy constructor
      */
     startTestSet("(full) = Operator");
-    vector <int> vectorToCopy;
-    vectorToCopy.numCapacity = 8;
-    vectorToCopy.numElements = 8;
-    vectorToCopy.buffer = new int[vectorToCopy.numCapacity];
-    for (int i = 0; i < vectorToCopy.numCapacity; i++) {
-        vectorToCopy.buffer[i]=i*i+1;
+    stack <int> stackToCopy;
+    stackToCopy.numCapacity = 8;
+    stackToCopy.numElements = 8;
+    stackToCopy.buffer = new int[stackToCopy.numCapacity];
+    for (int i = 0; i < stackToCopy.numCapacity; i++) {
+        stackToCopy.buffer[i]=i*i+1;
     }
-    vector <int> vectorAssignedCopy;
-    vectorAssignedCopy = vectorToCopy;
-    assertTrue(vectorAssignedCopy.numCapacity == 8, __LINE__);
-    assertTrue(vectorAssignedCopy.numElements == 8, __LINE__);
-    assertTrue(vectorAssignedCopy.buffer != vectorToCopy.buffer, __LINE__);
-    assertTrue(vectorAssignedCopy.buffer[0] == 1, __LINE__);
-    assertTrue(vectorAssignedCopy.buffer[1] == 2, __LINE__);
-    assertTrue(vectorAssignedCopy.buffer[2] == 5, __LINE__);
-    assertTrue(vectorAssignedCopy.buffer[3] == 10, __LINE__);
-    assertTrue(vectorAssignedCopy.buffer[4] == 17, __LINE__);
-    assertTrue(vectorAssignedCopy.buffer[5] == 26, __LINE__);
-    assertTrue(vectorAssignedCopy.buffer[6] == 37, __LINE__);
-    assertTrue(vectorAssignedCopy.buffer[7] == 50, __LINE__);
+    stack <int> stackAssignedCopy;
+    stackAssignedCopy = stackToCopy;
+    assertTrue(stackAssignedCopy.numCapacity == 8, __LINE__);
+    assertTrue(stackAssignedCopy.numElements == 8, __LINE__);
+    assertTrue(stackAssignedCopy.buffer != stackToCopy.buffer, __LINE__);
+    assertTrue(stackAssignedCopy.buffer[0] == 1, __LINE__);
+    assertTrue(stackAssignedCopy.buffer[1] == 2, __LINE__);
+    assertTrue(stackAssignedCopy.buffer[2] == 5, __LINE__);
+    assertTrue(stackAssignedCopy.buffer[3] == 10, __LINE__);
+    assertTrue(stackAssignedCopy.buffer[4] == 17, __LINE__);
+    assertTrue(stackAssignedCopy.buffer[5] == 26, __LINE__);
+    assertTrue(stackAssignedCopy.buffer[6] == 37, __LINE__);
+    assertTrue(stackAssignedCopy.buffer[7] == 50, __LINE__);
+    
     
     startTestSet("(Full) Copy Constructor");
-    vector <int> vectorCopy(vectorToCopy);
-    assertTrue(vectorCopy.numCapacity == 8, __LINE__);
-    assertTrue(vectorCopy.numElements == 8, __LINE__);
-    assertTrue(vectorCopy.buffer != vectorToCopy.buffer, __LINE__);
-    assertTrue(vectorCopy.numCapacity == 8, __LINE__);
-    assertTrue(vectorCopy.buffer[0] == 1, __LINE__);
-    assertTrue(vectorCopy.buffer[1] == 2, __LINE__);
-    assertTrue(vectorCopy.buffer[2] == 5, __LINE__);
-    assertTrue(vectorCopy.buffer[3] == 10, __LINE__);
-    assertTrue(vectorCopy.buffer[4] == 17, __LINE__);
-    assertTrue(vectorCopy.buffer[5] == 26, __LINE__);
-    assertTrue(vectorCopy.buffer[6] == 37, __LINE__);
-    assertTrue(vectorCopy.buffer[7] == 50, __LINE__);
+    stack <int> stackCopy(stackToCopy);
+    assertTrue(stackCopy.numCapacity == 8, __LINE__);
+    assertTrue(stackCopy.numElements == 8, __LINE__);
+    assertTrue(stackCopy.buffer != stackToCopy.buffer, __LINE__);
+    assertTrue(stackCopy.numCapacity == 8, __LINE__);
+    assertTrue(stackCopy.buffer[0] == 1, __LINE__);
+    assertTrue(stackCopy.buffer[1] == 2, __LINE__);
+    assertTrue(stackCopy.buffer[2] == 5, __LINE__);
+    assertTrue(stackCopy.buffer[3] == 10, __LINE__);
+    assertTrue(stackCopy.buffer[4] == 17, __LINE__);
+    assertTrue(stackCopy.buffer[5] == 26, __LINE__);
+    assertTrue(stackCopy.buffer[6] == 37, __LINE__);
+    assertTrue(stackCopy.buffer[7] == 50, __LINE__);
     
     /*
-     * Resetting to not full vector
+     * Resetting to not full stack
      */
-    startTestSet("(Not full) = Operator");
-    vectorToCopy.numElements = 3;
+    startTestSet("(Not Full) = Operator");
+    stackToCopy.numElements = 3;
     
-    vector <int> notFullVectorAssignedCopy;
-    notFullVectorAssignedCopy = vectorToCopy;
-    assertTrue(notFullVectorAssignedCopy.numCapacity == 3, __LINE__);
-    assertTrue(notFullVectorAssignedCopy.numElements == 3, __LINE__);
-    assertTrue(notFullVectorAssignedCopy.buffer != vectorToCopy.buffer, __LINE__);
-    assertTrue(notFullVectorAssignedCopy.buffer[0] == 1, __LINE__);
-    assertTrue(notFullVectorAssignedCopy.buffer[1] == 2, __LINE__);
-    assertTrue(notFullVectorAssignedCopy.buffer[2] == 5, __LINE__);
+    stack <int> notFullStackAssignedCopy;
+    notFullStackAssignedCopy = stackToCopy;
+    assertTrue(notFullStackAssignedCopy.numCapacity == 3, __LINE__);
+    assertTrue(notFullStackAssignedCopy.numElements == 3, __LINE__);
+    assertTrue(notFullStackAssignedCopy.buffer != stackToCopy.buffer, __LINE__);
+    assertTrue(notFullStackAssignedCopy.buffer[0] == 1, __LINE__);
+    assertTrue(notFullStackAssignedCopy.buffer[1] == 2, __LINE__);
+    assertTrue(notFullStackAssignedCopy.buffer[2] == 5, __LINE__);
     
     startTestSet("(Not Full) Copy Constructor");
-    vector <int> notFullVectorCopy(vectorToCopy);
-    assertTrue(notFullVectorCopy.numCapacity == 3, __LINE__);
-    assertTrue(notFullVectorCopy.numElements == 3, __LINE__);
-    assertTrue(notFullVectorCopy.buffer != vectorToCopy.buffer, __LINE__);
-    assertTrue(notFullVectorCopy.buffer[0] == 1, __LINE__);
-    assertTrue(notFullVectorCopy.buffer[1] == 2, __LINE__);
-    assertTrue(notFullVectorCopy.buffer[2] == 5, __LINE__);
-    
-    /*
-     * Testing Raw Iterators
-     */
-    startTestSet("Raw Iterator");
-    vector<int>::iterator nullIt = vector<int>::iterator();
-    assertTrue(nullIt.ptr == NULL, __LINE__);
-    int someInt = 3;
-    int *someIntPtr = &someInt;
-    vector<int>::iterator intPtr = vector<int>::iterator(&someInt);
-    assertTrue(intPtr.ptr == someIntPtr, __LINE__);
-    
-    
-    /*
-     * Testing begin and end
-     */
-    startTestSet("Iterator Begin and End");
-    vector<int>::iterator emptyVectorBeginIt = emptyVector.begin();
-    assertTrue(emptyVectorBeginIt.ptr == NULL, __LINE__);
-    
-    
-    vector<int>::iterator emptyVectorEndIt = emptyVector.end();
-    assertTrue(emptyVectorEndIt.ptr == NULL, __LINE__);
-    
-    vector<int>::iterator notFullVectorBeginIt = notFullVectorCopy.begin();
-    assertTrue(notFullVectorCopy.buffer == notFullVectorBeginIt.ptr, __LINE__);
-    
-    
-    vector<int>::iterator notFullVectorEndIt = notFullVectorCopy.end();
-    assertTrue(notFullVectorCopy.buffer+notFullVectorCopy.numElements == notFullVectorEndIt.ptr, __LINE__);
-    
-    /*
-     * Testing Iterator Assignment Operator
-     */
-    startTestSet("Iterator = Operator");
-    vector<int>::iterator iteratorToAssign;
-    iteratorToAssign.ptr = someIntPtr;
-    vector<int>::iterator assignedToIterator;
-    assignedToIterator = iteratorToAssign;
-    assertTrue(assignedToIterator.ptr == someIntPtr, __LINE__);
-    
-    /*
-     * Testing Iterator Comparison Operators
-     */
-    startTestSet("Iterator Comparison Operator");
-    assertTrue(iteratorToAssign == assignedToIterator, __LINE__);
-    //reset
-    int someOtherInt = 4;
-    int* someOtherIntPtr = &someOtherInt;
-    assignedToIterator.ptr = someOtherIntPtr;
-    assertTrue(iteratorToAssign != assignedToIterator, __LINE__);
-    
-    /*
-     * Testing Dereference Operator
-     */
-    startTestSet("Iterator * Operator");
-    assertTrue(*assignedToIterator == 4, __LINE__);
-    
-    /*
-     * Testing iterator incrementor
-     */
-    startTestSet("Iterator Pre and Post-Increment");
-    assertTrue((nullIt++).ptr == NULL, __LINE__);
-    assertTrue((++nullIt).ptr == NULL, __LINE__);
-    
-    //setting to the beginning of buffer
-    vector<int>::iterator fakeBeginIt = vector<int>::iterator();
-    fakeBeginIt.ptr = notFullVectorCopy.buffer;
-    
-    assertTrue((fakeBeginIt++).ptr == notFullVectorCopy.buffer, __LINE__);
-    //reset
-    fakeBeginIt.ptr = notFullVectorCopy.buffer;
-    assertTrue((++fakeBeginIt).ptr == notFullVectorCopy.buffer+1, __LINE__);
-    
-    
-    //setting to the end of buffer
-    startTestSet("Iterator Pre and Post-Decrement Operator");
-    vector<int>::iterator fakeEndIt = vector<int>::iterator();
-    fakeEndIt.ptr = notFullVectorCopy.buffer+notFullVectorCopy.numElements;
-    assertTrue((fakeEndIt--).ptr == notFullVectorCopy.buffer+notFullVectorCopy.numElements, __LINE__);
-    //reset
-    fakeEndIt.ptr = notFullVectorCopy.buffer+notFullVectorCopy.numElements;
-    assertTrue((--fakeEndIt).ptr == notFullVectorCopy.buffer+notFullVectorCopy.numElements - 1, __LINE__);
+    stack <int> notFullStackCopy(stackToCopy);
+    assertTrue(notFullStackCopy.numCapacity == 3, __LINE__);
+    assertTrue(notFullStackCopy.numElements == 3, __LINE__);
+    assertTrue(notFullStackCopy.buffer != stackToCopy.buffer, __LINE__);
+    assertTrue(notFullStackCopy.buffer[0] == 1, __LINE__);
+    assertTrue(notFullStackCopy.buffer[1] == 2, __LINE__);
+    assertTrue(notFullStackCopy.buffer[2] == 5, __LINE__);
     
     
     
     /*
-     * Testing push_back for Non-Integer Vector Behavior (Just to Make Sure vector Works For Other Types)
+     * Testing push for Non-Integer Stack Behavior (Just to Make Sure stack Works For Other Types)
      */
     startTestSet("Can Hold Strings");
-    vector <string> stringVector;
+    stack <std::string> stringStack;
     
-    stringVector.push_back("Hello");
-    stringVector.push_back("It's me");
-    stringVector.push_back("I was wondering");
-    assertTrue(stringVector.numCapacity == 4, __LINE__);
-    assertTrue(stringVector.buffer[0] == "Hello", __LINE__);
-    assertTrue(stringVector.buffer[1] == "It's me", __LINE__);
-    assertTrue(stringVector.buffer[2] == "I was wondering", __LINE__);
+    stringStack.push("Hello");
+    stringStack.push("It's me");
+    stringStack.push("I was wondering");
+    assertTrue(stringStack.numCapacity == 4, __LINE__);
+    assertTrue(stringStack.buffer[0] == "Hello", __LINE__);
+    assertTrue(stringStack.buffer[1] == "It's me", __LINE__);
+    assertTrue(stringStack.buffer[2] == "I was wondering", __LINE__);
+    
     
     generateTestingReport();
     
