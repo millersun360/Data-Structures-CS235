@@ -25,20 +25,22 @@ namespace custom
         #endif
 
         stack();
-        stack(int numCapacity);
-        stack(stack rhs);
+        stack(int numElements);
+        stack(int numElements, const T & t); //fix
+        stack(const stack<T> & rhs);
         ~stack();
 
-        stack assign(stack rhs);
-        int size();
+        stack & operator = (const stack<T> & rhs);
+        int size() const;
         int capacity();
         bool empty();
         void clear();
-        void push(T t);
+        void push(const T & t);
         void pop();
         T & top();
-
     };
-}
+
+    #include "stack.cpp"
+};
 
 #endif

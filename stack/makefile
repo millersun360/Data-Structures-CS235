@@ -14,7 +14,7 @@
   all: $(TARGET)
 
   $(TARGET): $(TARGET).cpp
-	$(CC) $(CFLAGS)  $(INCLUDES) -o tester.out $(TARGET).cpp
+	$(CC) $(CFLAGS)  $(INCLUDES)  $(TARGET).cpp
   clean:
 	$(RM) -rf *.o *.out *.dSYM
 #

@@ -34,9 +34,12 @@
 int asserts_existing = 112;
 
 #include <cstring>
+#include <string>
 #include "stack.h"
 #include "unit_testing.h"
 
+
+using std::string;
 using namespace custom;
 
 
@@ -372,7 +375,7 @@ int main(int argc, const char* argv[]) {
      * Testing push for Non-Integer Stack Behavior (Just to Make Sure stack Works For Other Types)
      */
     startTestSet("Can Hold Strings");
-    stack <std::string> stringStack;
+    stack <string> stringStack;
     
     stringStack.push("Hello");
     stringStack.push("It's me");
