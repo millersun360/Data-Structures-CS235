@@ -1,84 +1,105 @@
-#include "vector.h"
-
 /*
 
 VECTOR CLASS
 
 */
+using namespace custom;
 
 template <class T>
-vector <T> :: vector() //default constructor
+vector <T> :: vector() 
 {
     numElements = 0;
     numCapacity = 0;
+    buffer = NULL;
 }
 
 template <class T>
 vector <T> :: vector(int numElements)
 {
-    this -> numCapacity = numElements; // see resize
+    if (numElements <= 0)
+        throw "Error: vector sizes must be greater than 0.";
+
+    this->numCapacity = numElements;
+    this->numElements = numElements;
+    this->buffer = new T[numElements];
+    for (int i = 0; i < numElements; i++)
+        this->buffer[i] = T();
 }
 
 template <class T>
 vector <T> :: vector(int numElements, const T & t)
 {
-    this -> numCapacity = numElements;
-    for(int i = 0; i <= numElements; i++) //fill it!
-        buffer[i] = t;
+    if (numElements <= 0)
+        throw "Error: vector sizes must be greater than 0.";
+
+    this->numCapacity = numElements;
+    this->numElements = numElements;
+    this->buffer = new T[numElements];
+    for (int i = 0; i < numElements; i++)
+        this->buffer[i] = t;
+}
+
+template <class T>
+vector <T> :: vector(const vector <T> & rhs)
+{ 
+    *this = rhs;
 }
 
 template <class T>
 vector <T> :: ~vector()
 {
-    delete[] buffer;
+    delete [] buffer;
 }
 
 template <class T>
-vector <T> :: vector(const vector <T> & rhs)
+void vector <T> :: resize (int newCapacity)
 {
-    for(int i = 0; i <= numElements; i++) 
-        buffer[i] = rhs.buffer[i];
-}
-
-template <class T>
-void vector <T> :: resize (int numCapacity)
-{
-    if(numElements == 1 && numCapacity == 0)
+    if(newCapacity == 0)
     {
-        numCapacity = 1;
+        numCapacity = 0;
+        numElements = 0;
+        buffer = NULL;
     }
-    else
-    {    
-        numCapacity *= 2;
+    
+    if(newCapacity > 0)
+    {
+        T * newBuffer = new T[newCapacity];
+        if (newCapacity < numElements)
+            numElements = newCapacity;
+        for (int i = 0; i < numElements; i++)
+            newBuffer[i] = buffer[i];
+        if(buffer)
+            delete [] buffer;
+        buffer = newBuffer;
+        numCapacity = newCapacity;
     }
-    //create a copied vector but with double the capacity
-    const vector <T> rhs = vector(numCapacity); 
-    //fill it in with the values of the previous vector
-    vector(const vector <T> & rhs); //check to see if this is right
 }
 
 template <class T>
-custom :: vector <T> & vector <T> :: operator = (const vector & rhs)
+vector <T> & vector <T> :: operator = (const vector & rhs)
 {    
-    this -> numElements = rhs.numElements;  //
-    this -> numCapacity = rhs.numCapacity;  // Verify
-    this -> buffer = rhs.buffer;            //
+    numCapacity = rhs.numElements;
+    numElements = rhs.numElements;
+    buffer = new T[rhs.numElements];
+    for(int i = 0; i < rhs.numElements; i++)
+        buffer[i] = rhs.buffer[i];
+    return *this;
 }
 
 template <class T>
-int custom :: vector <T> :: size()
+int vector <T> :: size() const
 {
     return numElements;
 }
 
 template <class T>
-int custom :: vector <T> :: capacity()
+int vector <T> :: capacity()
 {
     return numCapacity;
 }
 
 template <class T>
-bool custom :: vector <T> :: empty()
+bool vector <T> :: empty()
 {
     if (numElements == 0)
         return true;
@@ -87,38 +108,50 @@ bool custom :: vector <T> :: empty()
 }
 
 template <class T>
-void custom :: vector <T> :: clear()
+void vector <T> :: clear()
 {
-    //remove elements?
     numElements = 0;
 }
 
 template <class T>
-void custom :: vector <T> :: push_back(const T & t)
+void vector <T> :: push_back(const T & t)
 {
-//add one element, if capacity is full, resize. 
-    numElements++;
-    if(numElements >= numCapacity) 
-    resize(numCapacity); 
-    buffer[numElements] = t; //put in the new element
+    if(numElements == numCapacity)
+        resize((numCapacity == 0) ? 1 : numCapacity * 2); //find another way to do this   
+    buffer[numElements++] = t;
 }
 
 template <class T>
 T & vector <T> :: operator [] (int index)
 {
+  
+    if(index < 0 || index >= size())
+        throw "Error: indices must be greater than zero and less than size().";
+
     return buffer[index];
 }
 
+
 template <class T>
-typename custom :: vector <T> :: iterator vector<T>::begin()
+const T & vector <T> :: operator [] (int index) const
 {
-    return buffer.begin() const;
+    if(index < 0 || index >= size())
+        throw "Error: indices must be greater than zero and less than size().";
+
+    return buffer[index];
+}
+
+
+template <class T>
+typename vector <T> :: iterator vector<T>::begin()
+{
+    return iterator(buffer);
 }
 
 template <class T>
-typename custom :: vector <T> :: iterator vector <T> :: end()
+typename vector <T> :: iterator vector <T> :: end()
 {
-    return buffer.end() const;
+    return iterator(buffer + numElements);
 }
 
 /*
@@ -128,27 +161,28 @@ ITERATOR CLASS
 */
 
 template <class T>
-custom :: vector <T> :: iterator :: iterator()
+vector <T> :: iterator :: iterator()
 {
-    ptr = null;
+    ptr = NULL;
 }
 
 template <class T> 
-custom :: vector <T> :: iterator :: iterator(T * p)
+vector <T> :: iterator :: iterator(T * p)
 {
     ptr = p;
 }
 
 template <class T>
-custom :: vector <T> :: iterator :: iterator(const iterator & rhs)
+vector <T> :: iterator :: iterator(const iterator & rhs)
 {
-    this -> p = rhs;
+    ptr = rhs.ptr;
 }
 
 template <class T>
-typename custom :: vector <T> :: iterator & vector <T> :: iterator :: operator = (const iterator & rhs)
+typename vector <T> :: iterator & vector <T> :: iterator :: operator = (const iterator & rhs)
 {
-    return rhs;
+    this->ptr = rhs.ptr; 
+    return *this;
 }
 
 template <class T>
@@ -164,27 +198,37 @@ bool vector <T> :: iterator :: operator == (const iterator & rhs) const
 }
 
 template<class T>
-typename custom :: vector <T> :: iterator & vector<T> :: iterator :: operator ++ ()
+typename vector <T> :: iterator & vector<T> :: iterator :: operator ++ ()
 {
-    return ptr++;
+    if (ptr != NULL)
+        ptr++;
+    return *this;
 }
 
 template <class T>
-typename custom :: vector <T> :: iterator vector <T> :: iterator :: operator ++ (int postfix)
+typename vector <T> :: iterator vector <T> :: iterator :: operator ++ (int postfix)
 {
-    return ++postfix;
+    iterator tmp(*this);
+    if (ptr != NULL)
+        ptr++;
+    return tmp;
 }
 
 template<class T>
-typename custom :: vector <T> :: iterator & vector<T> :: iterator :: operator -- ()
+typename vector <T> :: iterator & vector<T> :: iterator :: operator -- ()
 {
-    return ptr--;
+     if (ptr != NULL)
+        ptr--;
+    return *this;
 }
 
 template <class T>
-typename custom :: vector <T> :: iterator vector <T> :: iterator :: operator -- (int postfix)
+typename vector <T> :: iterator vector <T> :: iterator :: operator -- (int postfix)
 {
-    return --postifx;
+    iterator tmp(*this);
+    if (ptr != NULL)
+        ptr--;
+    return tmp;
 }
 
 template <class T>

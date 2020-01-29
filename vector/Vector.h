@@ -1,6 +1,6 @@
 #ifndef VECTOR_H //this is the header guard
 #define VECTOR_H
-
+#include <iostream>
 #ifdef UNIT_TESTING // this is the unit testing macro
 int main(int argc, const char* argv[]);
 #endif
@@ -32,13 +32,13 @@ namespace custom // (main line 41)
         ~vector(); //deconstructer
 
         vector <T> & operator = (const vector & rhs);
-        int size();
+        int size() const;
         int capacity();
         bool empty();
         void clear();
         void push_back(const T & t); //adds the element to the end, if numElements = numCapacity, call resize
         T & operator [] (int index); //check to see that this is what its called in main
-       
+        const T & operator [] (int index) const;
         class iterator;
 
         iterator begin();
@@ -72,8 +72,8 @@ namespace custom // (main line 41)
         T & operator * ();
     };
 
-};
+    #include "vector.cpp"
 
-#include "vector.cpp"
+};
 
 #endif
