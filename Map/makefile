@@ -16,5 +16,5 @@
   $(TARGET): $(TARGET).cpp
 	$(CC) $(CFLAGS)  $(INCLUDES) $(TARGET).cpp
   clean:
-	$(RM) -rf *.o *.out *.dSYM
+	$(RM) -rf *.o *.exe *.dSYM
 #

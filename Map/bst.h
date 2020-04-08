@@ -7,75 +7,100 @@ int main(int argc, const char* argv[]);
 
 namespace custom
 {
-    template <class T>
-    class BST
-    {
-        public:
-        #ifdef UNIT_TESTING
-        friend int :: main(int argc, const char* argv[]);
-        #endif
-        class iterator;
-        class BNode;
-        BST();
-        BST(const BST<T> & rhs);
-        ~BST();
-        BST <T> & operator = (const BST<T> & rhs);
-        int size() const;
-        bool empty() const;
-        void clear();
-        void insert(const T & t);
-        void erase(iterator it);
-        iterator find(const T & t);
-        iterator begin();
-        iterator end();
+   /**
+    * A custom binary search tree implementation to satisfy CS235 unit tests for
+    * week 09. While this version of the BST class satisfies the BST constraint
+    * it is not self-balancing. As a result, some operations could take as long
+    * as O(n) depending on the organization of the underlying nodes.
+    */
+   template <class T>
+   class BST
+   {
+      public:
 
-        private:
-        BNode * root;
-        int numElements;
-        BNode * copyFrom(BNode* pSrc);
-        void deleteFrom(BNode * & pSrc); //figure out this
-        BNode * minNode(BNode * pSrc);
-        BNode * maxNode(BNode * pSrc);
-        BNode * existsIn(BNode * pSrc, T t);
-        BNode * insertAt(BNode * pSrc, T t);
-    };
+         #ifdef UNIT_TESTING
+         friend int ::main(int argc, const char* argv[]);
+         #endif
 
-    template <class T>
-    class BST<T>::iterator
-    {
-        private:
-        BNode * ptr;
+         class BNode;
+         class iterator;
 
-        public:
-        #ifdef UNIT_TESTING
-        friend int :: main(int argc, const char* argv[]);
-        #endif
-        friend class BST<T>;
-        iterator();
-        iterator(BNode * ptr);
-        iterator(const iterator & rhs);
-        iterator & operator = (const iterator & it);
-        bool operator == (const iterator & it) const;
-        bool operator != (const iterator & it) const;
-        iterator & operator ++ (); //no right hand side
-        iterator operator ++ (int postfix); //prefix / postfix
-        iterator & operator -- ();
-        iterator operator -- (int postfix);
-        T & operator * ();
-    };
+         BST();
+         BST(const BST<T>& rhs);
+         ~BST();
+         BST<T>& operator = (const BST<T>& rhs);
 
-    template <class T>
-    class BST<T>::BNode
-    {
-        public:
-        BNode();
-        BNode(const T & t);
-        T data;
-        BNode * pLeft;
-        BNode * pRight;
-        BNode * pParent;
+         int size() const;
+         bool empty() const;
+         void clear();
+         void insert(const T& t);
+         void erase(iterator it);
+         iterator find(const T& t);
+         
+         iterator begin();
+         iterator end();
 
-    };
-    #include "bst.cpp"
+      private:
+         void init();
+
+         // recursive helper methods
+         BNode* copyFrom(BNode* pSrc);
+         int sizeOf(BNode* pTree);
+         void deleteFrom(BNode*& pSrc);
+         BNode* minNode(BNode* pSrc);
+         BNode* maxNode(BNode* pSrc);
+         BNode* existsIn(BNode* pSrc, T t);
+         BNode* insertAt(BNode* pSrc, T t);
+         
+         BNode* root;
+         int numElements;
+      
+   };
+
+   template <class T>
+   class BST<T>::BNode
+   {
+      public:
+         BNode();
+         BNode(const T& data);
+            
+         T data;
+         BNode* pLeft;
+         BNode* pRight;
+         BNode* pParent;
+   };
+
+   template <class T>
+   class BST<T>::iterator
+   {
+      public:
+         
+         #ifdef UNIT_TESTING
+         friend int ::main(int argc, const char* argv[]);
+         #endif
+
+         friend class BST<T>;
+         
+         iterator();
+         iterator(BNode* p);
+         iterator(const iterator& rhs);
+         iterator & operator = (const iterator& rhs);
+         bool operator != (const iterator& rhs) const;
+         bool operator == (const iterator& rhs) const;
+         T& operator * ();
+         iterator& operator ++ ();
+         iterator operator ++ (int postfix);
+         iterator& operator -- ();
+         iterator operator -- (int postfix);
+         
+      private:
+         
+         BNode* ptr;
+   
+   };
+
 }
-#endif
+
+#include "bst.cpp"
+
+#endif 
