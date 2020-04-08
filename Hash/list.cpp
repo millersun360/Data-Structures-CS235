@@ -1,219 +1,210 @@
+#include "list.h"
+
 using namespace custom;
 
-template <class T>
-list<T>::node::node()
-{
-    data = 0;
-    pNext = NULL;
-    pPrev = NULL;
-}
-
-template <class T>
-list<T>::node::node(const T * t)
-{
-    data = t;
-    pNext = NULL;
-    pPrev = NULL;
-}
+/* custom list implementation 
+ ******************************************************************************/
 
 template <class T>
 list<T>::list()
 {
-    pHead = NULL;
-    pTail = NULL;
-    numElements = 0;
+   pHead = NULL;
+   pTail = NULL;
+   numElements = 0;
 }
 
 template <class T>
-list<T>::list(const list<T> & rhs)
+list<T>::list(const list<T> &rhs)
 {
-    *this = rhs;
+   pHead = NULL;
+   pTail = NULL;
+   numElements = 0;
+   *this = rhs;
 }
 
 template <class T>
 list<T>::~list()
 {
-    delete();
+   clear();
 }
 
 template <class T>
-list<T> & list<T>::operator = (const list & rhs)
+list<T> &list<T>::operator=(const list<T> &rhs)
 {
-
+   clear();
+   for (node *p = rhs.pHead; p; p = p->pNext)
+      push_back(p->data);
+   return *this;
 }
 
 template <class T>
 int list<T>::size() const
 {
-    return numElements;
+   return numElements;
 }
 
 template <class T>
-bool list<T>::empty()
+bool list<T>::empty() const
 {
-    return pHead = NULL;
+   return pHead == NULL;
 }
 
 template <class T>
 void list<T>::clear()
 {
 
+   for (node *p = pHead; p;)
+   {
+      node* pTarget = p;
+      p = p->pNext;
+      delete pTarget;
+      numElements--;
+   }
+   pHead = NULL;
+   pTail = NULL;
 }
 
 template <class T>
-void list<T>::push_back(const T & t)
+void list<T>::push_front(const T &t)
 {
-
+   insertAt(pHead, t, false);
 }
 
 template <class T>
-void list<T>::push_front(const T & t)
+void list<T>::push_back(const T &t)
 {
-
-}
-
-template <class T>
-void list<T>::pop_back()
-{
-
+   insertAt(pTail, t, true);
 }
 
 template <class T>
 void list<T>::pop_front()
 {
-
+   if (!empty())
+   {
+      pHead = pHead->pNext;
+      pHead->pPrev = NULL;
+      numElements--;
+   }
 }
 
 template <class T>
-T & list<T>::front()
+void list<T>::pop_back()
 {
-    if (!empty())
-        return pHead.data;
-    throw "Error: Calling front on empty list.";
+   if (!empty())
+   {
+      pTail = pTail->pPrev;
+      pTail->pNext = NULL;
+      numElements--;
+   }
 }
 
 template <class T>
-T & list<T>::back()
+T &list<T>::front()
 {
-    if (!empty())
-        return pTail.data;
-    throw "Error: Calling back on empty list."
+   if (!empty())
+      return pHead->data;
+
+   else
+      throw "Error: Calling front on empty list.";
 }
 
 template <class T>
-list<T>::iterator list<T>::find(const T & t)
+T &list<T>::back()
 {
+   if (!empty())
+      return pTail->data;
 
+   else
+      throw "Error: Calling back on empty list.";
+}
+
+//Iterator coding********************************************************************
+
+template <class T>
+void list<T>::insert(iterator it, T e)
+{
+   insertAt(it.ptr, e, false);
 }
 
 template <class T>
-void list<T>::erase (iterator it)
+void list<T>::insertAt(node *pCurrent, T element, bool after)
 {
+   node *pNew = new node(element);
 
+   if (empty())
+   {
+      pHead = pNew;
+      pTail = pNew;
+      numElements++;
+      return;
+   }
+
+   if (after == false) // before
+   {
+      if (pHead == pCurrent) // the head
+         pHead = pNew;       // we have a new head
+
+      pNew->pNext = pCurrent;
+      pNew->pPrev = pCurrent->pPrev;
+      pCurrent->pPrev = pNew;
+      if (pNew->pPrev)
+         pNew->pPrev->pNext = pNew;
+   }
+   if (after == true)
+   {
+      if (pTail == pCurrent)
+         pTail = pNew;
+      
+      pNew->pPrev = pCurrent;
+      pNew->pNext = pCurrent->pNext;
+      pCurrent->pNext = pNew;
+      if (pNew->pNext)
+         pNew->pNext->pPrev = pNew;
+   }
+   numElements++;
 }
 
 template <class T>
-void list<T>::insert (iterator it, const T & t)
+typename list<T>::iterator list<T>::find(const T &t)
 {
-    node pNew = new node(t);
-    if (it != NULL)
-    {
-        pNew.pNext = it;
-        pNew.pPrev = it.pPrev;
-        it.pPrev = pNew;
-        if (pNew.pPrev)
-            pNew.pPrev.pNext = pNew;
-    }
-    return pNew;
+   for (node *p = pHead; p; p = p->pNext)
+   {
+      if (p->data == t)
+         return iterator(p);
+   }
+   return iterator(NULL);
 }
 
 template <class T>
-list<T>::iterator list<T>::begin()
+typename list<T>::iterator list<T>::erase(list<T>::iterator it)
 {
-    return iterator(pBegin);
+   node *pMiddle = it.ptr;
+
+   if (pMiddle == NULL)
+      return iterator(NULL);
+
+   node *pResult = (pMiddle->pPrev) ? pMiddle->pPrev : pMiddle->pNext;
+
+   if (pMiddle->pPrev)
+      pMiddle->pPrev->pNext = pMiddle->pNext;
+   if (pMiddle->pNext)
+      pMiddle->pNext->pPrev = pMiddle->pPrev;
+   if (pMiddle == pHead)
+      pHead = pMiddle->pNext;
+
+   delete pMiddle;
+   pMiddle = NULL;
+   return iterator(pResult);
 }
 
 template <class T>
-list<T>::iterator list<T>::end()
+typename list<T>::iterator list<T>::begin()
 {
-
+   return iterator(pHead);
 }
 
 template <class T>
-list<T>::iterator::iterator()
+typename list<T>::iterator list<T>::end()
 {
-    ptr = NULL;
+   return iterator(pTail);
 }
-
-template <class T> 
-list<T>::iterator::iterator(T * p)
-{
-    ptr = p;
-}
-
-template <class T>
-list<T>::iterator::iterator(const iterator & rhs)
-{
-    ptr = rhs.ptr;
-}
-
-template <class T>
-typename list<T>::iterator & list<T>::iterator::operator = (const iterator & rhs)
-{
-    this->ptr = rhs.ptr; 
-    return *this;
-}
-
-template <class T>
-bool list<T>::iterator::operator != (const iterator & rhs) const
-{
-    return rhs.ptr != this -> ptr;
-}
-
-template <class T>
-bool list<T>::iterator::operator == (const iterator & rhs) const
-{
-    return rhs.ptr == this -> ptr;
-}
-
-template<class T>
-typename list<T>::iterator & list<T>::iterator::operator ++ ()
-{
-    if (ptr != NULL)
-        ptr++;
-    return *this;
-}
-
-template <class T>
-typename list<T>::iterator list<T>::iterator::operator ++ (int postfix)
-{
-    iterator tmp(*this);
-    if (ptr != NULL)
-        ptr++;
-    return tmp;
-}
-
-template<class T>
-typename list<T>::iterator & list<T>::iterator::operator -- ()
-{
-     if (ptr != NULL)
-        ptr--;
-    return *this;
-}
-
-template <class T>
-typename list<T>::iterator list<T>::iterator::operator -- (int postfix)
-{
-    iterator tmp(*this);
-    if (ptr != NULL)
-        ptr--;
-    return tmp;
-}
-
-template <class T>
-T & list<T>::iterator::operator * ()
-{
-    return * ptr;
-}
-
-

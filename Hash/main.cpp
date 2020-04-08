@@ -31,7 +31,7 @@
 #define UNIT_TESTING
 //Do not change the next line without instructor approval.
 //To do so is cheating and, when found, will result in consequences.
-int asserts_existing = 142;
+int asserts_existing = 144;
 
 #include <cstring>
 #include "unit_testing.h"
@@ -282,7 +282,7 @@ int main(int argc, const char * argv[])
     Hash<int>emptyAssignTo(5);
     unit_testing_delete_call_counter = 0;
     emptyAssignTo = assignFrom;
-    assertTrue(unit_testing_delete_call_counter == 6, __LINE__);
+    assertTrue(unit_testing_delete_call_counter == 10, __LINE__);
     assertTrue(emptyAssignTo.numElements == 4, __LINE__);
     assertTrue(emptyAssignTo.numBuckets == 3, __LINE__);
     assertTrue(emptyAssignTo.table[0] != NULL, __LINE__);
@@ -390,6 +390,12 @@ int main(int argc, const char * argv[])
     nonEmptyInsertHash.table[2] = new list<int>();
     nonEmptyInsertHash.numBuckets = 3;
     nonEmptyInsertHash.numElements = 4;
+    
+    // mm
+    nonEmptyInsertHash.table[0]->numElements = 2;
+    nonEmptyInsertHash.table[1]->numElements = 1;
+    nonEmptyInsertHash.table[2]->numElements = 1;
+    
     nonEmptyInsertHash.table[2]->pHead = new list<int>::node(8);
     nonEmptyInsertHash.table[2]->pTail = nonEmptyInsertHash.table[2]->pHead;
     nonEmptyInsertHash.table[1]->pHead = new list<int>::node(7);
